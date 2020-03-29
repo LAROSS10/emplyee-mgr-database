@@ -18,6 +18,9 @@ connection.connect(function(err) {
     viewDepartment();
     viewEmployees();
     viewRoles();
+    addDepartment();
+    addEmployee()
+    addRole();
     
 });
 
@@ -25,7 +28,7 @@ connection.connect(function(err) {
         connection.query("SELECT * FROM department", function(err,res){
             if (err) throw err;
             for (let i=0; i<res.length; i++) {
-                console.log(res[i].department_name)
+                console.table(res[i].department_name)
             }
             // console.log(res);            
         })
@@ -35,7 +38,7 @@ connection.connect(function(err) {
         connection.query("SELECT * FROM employee", function(err,res){
             if (err) throw err;
             for (let i=0; i<res.length; i++) {
-                console.log(res[i].first_name + " " + " " +  res[i].last_name)
+                console.table(res[i].first_name + " " + " " +  res[i].last_name)
             }
             // console.log(res);
             connection.end;
@@ -46,9 +49,57 @@ connection.connect(function(err) {
         connection.query("SELECT * FROM title", function(err,res){
             if (err) throw err;
             for (let i=0; i<res.length; i++) {
-                console.log(res[i].title + " " + " " +  res[i].salary)
+                console.table(res[i].title + " " + " " +  res[i].salary)
             }
             // console.log(res);
             connection.end;
         })
     }; 
+
+    function addDepartment() {
+    const query = connection.query("INSERT INTO department SET ?",  {
+            department_name: "Janitor"
+        },
+        function(err,res){
+            if (err) throw err;
+            
+                console.table(res.affectedRows + "department added")
+            
+            // console.log(res);            
+        })
+        console.log(query.sql)
+    };
+
+    function addEmployee() {
+    const query = connection.query("INSERT INTO employee SET ?",  {
+            first_name: "Testy",
+            last_name: "trudy",
+            title_id: 400,
+            manager_id: 15,
+        },
+        function(err,res){
+            if (err) throw err;
+            
+                console.table(res.affectedRows + "employee added")
+            
+            // console.log(res);            
+        })
+        console.log(query.sql)
+    };
+
+    function addRole() {
+        const query = connection.query("INSERT INTO title SET ?",  {
+                title: "Vice President",
+                salary: 100000,
+                department_id: 4,
+                
+            },
+            function(err,res){
+                if (err) throw err;
+                
+                    console.table(res.affectedRows + "employee added")
+                
+                // console.log(res);            
+            })
+            console.log(query.sql)
+        };
