@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+const cTable = require("console.table");
 
 // create the connection to the manage_employees database
 var connection = mysql.createConnection ({
@@ -15,14 +16,53 @@ connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id" + connection.threadId);
     // start the application by running start function below
-    viewDepartment();
-    viewEmployees();
-    viewRoles();
-    addDepartment();
-    addEmployee()
-    addRole();
+    // viewDepartment();
+    // viewEmployees();
+    // viewRoles();
+    // addDepartment();
+    // addEmployee()
+    // addRole();
+    start();
+    // connection.end();
     
 });
+
+
+function start() {
+    inquirer.prompt ({
+        name: "start",
+        type: "list",
+        message: "What would you like to do?",
+        choices: ["View all Employees", "View all Departments", "View all Roles"]
+    })
+    .then(function(answer){
+        if(answer.start === "View all Employees") {
+            viewEmployees();
+        }
+        // connection.end();
+    })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     function viewDepartment() {
         connection.query("SELECT * FROM department", function(err,res){
@@ -41,7 +81,7 @@ connection.connect(function(err) {
                 console.table(res[i].first_name + " " + " " +  res[i].last_name)
             }
             // console.log(res);
-            connection.end;
+            // connection.end;
         })
     }; 
 
@@ -52,7 +92,7 @@ connection.connect(function(err) {
                 console.table(res[i].title + " " + " " +  res[i].salary)
             }
             // console.log(res);
-            connection.end;
+            // connection.end;
         })
     }; 
 
