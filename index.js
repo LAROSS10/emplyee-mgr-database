@@ -14,19 +14,22 @@ var connection = mysql.createConnection ({
 connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id" + connection.threadId);
-
     // start the application by running start function below
     selectEmployee();
     
 });
 
     function selectEmployee() {
-        connection.query("SELECT * FROM department", function(err,res) {
-    if(err) throw err;
-    console.log(res);
-    connection.end();
-});    
-        }
+        connection.query("SELECT * FROM department", function(err,res){
+            if (err) throw err;
+            for (let i=0; i<res.length; i++) {
+                console.log(res[i].department_name)
+            }
+
+
+            // console.log(res);
+            connection.end;
+        })
+    };
     
-
-
+         
