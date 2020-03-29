@@ -33,42 +33,55 @@ function start() {
         name: "start",
         type: "list",
         message: "What would you like to do?",
-        choices: ["View all Employees", "View all Departments", "View all Roles"]
+        choices: ["View all Employees",
+         "View all Departments",
+          "View all Roles",          
+          "Add an Employee",
+          "Add a Department",
+          "Add a Role",
+          "Update a Department"
+        ]
     })
     .then(function(answer){
-        if(answer.start === "View all Employees") {
+        switch (answer.start) {
+
+            case "View all Employees":
             viewEmployees();
-        }
-        // connection.end();
-    })
-}
+            break;
 
+            case "View all Departments":
+            viewDepartment();
+            break;
+            
+            case "View all Roles":
+            viewRoles();
+            break;
 
+            case "Add an Employee":
+            addEmployee();
+            break;
 
+            case "Add a Department":
+            addDepartment();
+            break;
 
+            case "Add a Role":
+            addRole();
+            break;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            case "Update a Department":
+                updateDepartment();
+                break;
+        }        
+        })      
+    }
 
     function viewDepartment() {
         connection.query("SELECT * FROM department", function(err,res){
             if (err) throw err;
             for (let i=0; i<res.length; i++) {
                 console.table(res[i].department_name)
+                
             }
             // console.log(res);            
         })
@@ -96,50 +109,139 @@ function start() {
         })
     }; 
 
+
+
     function addDepartment() {
-    const query = connection.query("INSERT INTO department SET ?",  {
-            department_name: "Janitor"
-        },
-        function(err,res){
-            if (err) throw err;
-            
-                console.table(res.affectedRows + "department added")
-            
-            // console.log(res);            
+        inquirer.prompt([
+          {
+              name: "department",
+              type: "input",
+              message: "Please enter the department name you would like to add"
+          }  
+        ])
+        .then(function(answer){
+            connection.query("INSERT INTO department SET ?", 
+            {
+                department_name: answer.department
+            }, function(err){
+                if (err) throw err;
+                console.log("You have successfully added a department")
+            })
+            connection.end();
         })
-        console.log(query.sql)
-    };
+    }
 
     function addEmployee() {
-    const query = connection.query("INSERT INTO employee SET ?",  {
-            first_name: "Testy",
-            last_name: "trudy",
-            title_id: 400,
-            manager_id: 15,
+        inquirer.prompt([
+          {
+              name: "employeeFirstName",
+              type: "input",
+              message: "Please enter the Employee's first name."
+          },  
+          {
+            name: "employeeLastName",
+            type: "input",
+            message: "Please enter the Employee's last name."
         },
-        function(err,res){
-            if (err) throw err;
-            
-                console.table(res.affectedRows + "employee added")
-            
-            // console.log(res);            
-        })
-        console.log(query.sql)
-    };
-
-    function addRole() {
-        const query = connection.query("INSERT INTO title SET ?",  {
-                title: "Vice President",
-                salary: 100000,
-                department_id: 4,
+        {
+            name: "titleId",
+            type: "input",
+            message: "Please enter the Employee's title Id."
+        } ,
+        {
+            name: "managerId",
+            type: "input",
+            message: "Please enter the Employee's manager Id."
+        }    
+        ])
+        .then(function(answer){
+            connection.query("INSERT INTO employee SET ?", 
+            {
                 
-            },
-            function(err,res){
+                first_name: answer.employeeFirstName,
+                last_name: answer.employeeLastName,
+                title_id: answer.titleId,
+                manager_id: answer.managerId
+            }, function(err){
                 if (err) throw err;
-                
-                    console.table(res.affectedRows + "employee added")
-                
-                // console.log(res);            
+                console.log("You have successfully added a new Employee")
             })
-            console.log(query.sql)
-        };
+            connection.end();
+        })
+    }
+    function addRole() {
+        inquirer.prompt([
+          {
+              name: "Title",
+              type: "input",
+              message: "Please enter the title you would like to add"
+          },  
+          {
+            name: "Salary",
+            type: "input",
+            message: "Please enter the Salary you would like to add"
+        }, 
+        {
+            name: "departmentId",
+            type: "input",
+            message: "Please enter the Salary you would like to add"
+        }  
+        ])
+        .then(function(answer){
+            connection.query("INSERT INTO title ?", 
+            {
+                
+                title: answer.title,
+                salary: answer.salary,
+                department_id: answer.departmentId
+            }, function(err){
+                if (err) throw err;
+                console.log("You have successfully added a department")
+            })
+            connection.end();
+        })
+    }
+
+    // function updateDepartment() {
+    //     inquirer
+    //       .prompt({
+    //         name: "changeDepartment",
+    //         type: "input",
+    //         message: "What department would you like to change?"
+    //       })
+    //       .then(function(answer) {
+    //         var query = "SELECT department_name FROM department WHERE ?";
+    //         connection.query(query, { department_name: answer.changeDepartment }, function(err, res) {
+    //           if (err) throw err;
+    //           for (var i= 0; i<res.length; i++){
+    //               console.log(res[i].department_name)
+    //           }
+            
+               
+    //             // console.log("Thank you");
+              
+    //           changeDepartment();
+    //         });
+    //       });
+    //   }
+
+    //   function changeDepartment() {
+    //     inquirer
+    //       .prompt({
+    //         name: "renameDepartment",
+    //         type: "input",
+    //         message: "Please enter new department name?"
+    //       })
+    //       .then(function(answer) {
+    //         var query = "UPDATE department SET ? WHERE ?";
+    //         connection.query(query, { department_name: answer.renameDepartment }, function(err, res) {
+    //           if (err) throw err;
+    //           console.log(res.affectedRows + "department updated")
+                      
+               
+    //             // console.log("Thank you");
+              
+    //           addDepartment();
+    //         });
+    //       });
+    //   }
