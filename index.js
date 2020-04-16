@@ -80,7 +80,7 @@ function start() {
         connection.query("SELECT * FROM department", function(err,res){
             if (err) throw err;
             for (let i=0; i<res.length; i++) {
-                console.table(res[i].department_name)
+                console.table({department_name: res[i].department_name})
                 
             }
             // console.log(res);            
@@ -91,7 +91,11 @@ function start() {
         connection.query("SELECT * FROM employee", function(err,res){
             if (err) throw err;
             for (let i=0; i<res.length; i++) {
-                console.table(res[i].first_name + " " + " " +  res[i].last_name)
+                console.table({
+                    first_name: res[i].first_name,
+                    last_name: res[i].last_name,
+                    })
+                // console.log(res[i].first_name + " " + " " +  res[i].last_name)
             }
             // console.log(res);
             // connection.end;
@@ -184,7 +188,7 @@ function start() {
         {
             name: "departmentId",
             type: "input",
-            message: "Please enter the Salary you would like to add"
+            message: "Please enter the Department you would like to add"
         }  
         ])
         .then(function(answer){
